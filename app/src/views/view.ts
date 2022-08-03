@@ -1,3 +1,4 @@
+import { inspect } from "../decorators/inspect.js";
 import { logarTempoDeExecucao } from "../decorators/logar-tempo-de-execucao.js";
 
 export abstract class View<T> {
@@ -17,6 +18,7 @@ export abstract class View<T> {
         }
     }
 
+    @inspect()
     @logarTempoDeExecucao()
     public update(model: T): void {
         const t1 = performance.now()

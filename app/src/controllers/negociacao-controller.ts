@@ -1,21 +1,25 @@
+import { domInjector } from '../decorators/dom-injector.js';
 import { DiasDaSemana } from '../enums/dias-da-semana.js';
 import { Negociacao } from '../models/negociacao.js';
 import { Negociacoes } from '../models/negociacoes.js';
+import { NegociacoesService } from '../service/negociacoes-service.js';
 import { MensagemView } from '../views/mensagem-view.js';
 import { NegociacoesView } from '../views/negociacoes-view.js';
 
 export class NegociacaoController {
+    @domInjector('#data')
     private inputData: HTMLInputElement;
+    @domInjector('#quantidade')
     private inputQuantidade: HTMLInputElement;
+    @domInjector('#valor')
     private inputValor: HTMLInputElement;
+
     private negociacoes = new Negociacoes();
-    private negociacoesView = new NegociacoesView('#negociacoesView', true);
-    private mensagemView = new MensagemView('#mensagemView');
+    private negociacoesView = new NegociacoesView('#negociacoesView', true)
+    private mensagemView = new MensagemView('#mensagemView')
+    private negociacaoService = new NegociacoesService
 
     constructor() {
-        this.inputData = <HTMLInputElement>document.querySelector('#data');
-        this.inputQuantidade = document.querySelector('#quantidade') as HTMLInputElement;
-        this.inputValor = document.querySelector('#valor') as HTMLInputElement;
         this.negociacoesView.update(this.negociacoes);
     }
 
@@ -39,6 +43,19 @@ export class NegociacaoController {
         this.limparFormulario();
         this.atualizaView();
     }
+
+    importaDados (): void {
+
+        this.negociacaoService
+        .obterNegociacoes()
+        .then( negociacoesDeHoje => {
+            negociacoesDeHoje.forEach( n => {
+                this.negociacoes.adiciona(n)
+            })
+            this.negociacoesView.update(this.negociacoes)
+        })
+    }
+
 
     private ehDiaUtil(data: Date) {
         return data.getDay() > DiasDaSemana.DOMINGO 

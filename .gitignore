@@ -1,2 +1,5 @@
 /node_modules
 /servidor-api/node_modules
+.DS_Store
+app/.DS_Store
+app/dist/.DS_Store
